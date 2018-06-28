@@ -231,7 +231,7 @@ export class ChartPage {
           duration: 3000,
           position: 'top'
         })
-        toast.present();
+        toast.present()
       }
     }
   }
