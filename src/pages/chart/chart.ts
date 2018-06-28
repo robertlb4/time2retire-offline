@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ToastController, LoadingController } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ToastController, LoadingController, AlertController } from 'ionic-angular';
 import { FormBuilder, Validators } from '@angular/forms';
 import { Chart } from 'chart.js'
 import * as ChartLabels from 'chartjs-plugin-datalabels';
@@ -28,6 +28,7 @@ export class ChartPage {
   bestYear: number;
   chartSave: any;
   chartData: any;
+  sliderIncrementer: any = 0;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
@@ -37,6 +38,7 @@ export class ChartPage {
     public _http: HttpClientModule,
     public toastCtrl: ToastController,
     public loader: LoadingController,
+    public alertCtrl: AlertController,
     public navparam: NavParams,
   ) {
     this.inputForm = formBuilder.group({
@@ -219,8 +221,18 @@ export class ChartPage {
   }
   restrictValue() {
     /*restricts lower value from going out of the bounds of the bebefitObject*/
-    if (this.slider.lower >= 70) {
+    if (this.slider.lower > 70) {
+      this.sliderIncrementer ++
       this.slider.lower = 70;
+      console.log(this.sliderIncrementer)
+      if (this.sliderIncrementer%10 === 0) {
+        let toast = this.toastCtrl.create({
+          message: 'The Social Security Administration requires you to start taking benefits at 70',
+          duration: 3000,
+          position: 'top'
+        })
+        toast.present();
+      }
     }
   }
 
@@ -276,9 +288,30 @@ export class ChartPage {
     )
   }
   navProfile(){
-    console.log("navigating?")
     this.navCtrl.setRoot("ProfilePage")
   }
+
+  showModal(side) {
+    let title, msg;
+    if (side === "left") {
+      title = 'Best Age to Retire'
+      msg = `We calculate ${this.bestYear} to be the best age for you to begin reciving benefits.  This is the age that will allow you to
+      receive the most from Social Security throughout your retirement based on the life expectancy below.`
+    } else {
+      title = 'Age to Break Even'
+      msg = `Based on retirement age listed below, you will earn back the income paid into Social Security by age ${this.breakEvenYear}`
+    }
+    let alert = this.alertCtrl.create({
+      title: title,
+      message: msg,
+      buttons: [{
+        text: 'Ok',
+        role: 'cancel'
+      }]
+    })
+    alert.present();
+  }
+
   ionViewDidLoad() {
     console.log(this._user.user)
     Chart.pluginService.register(ChartLabels);
