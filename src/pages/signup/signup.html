@@ -1,44 +1,183 @@
 <ion-header>
-
   <ion-navbar>
     <ion-title>{{ 'SIGNUP_TITLE' | translate }}</ion-title>
   </ion-navbar>
-
 </ion-header>
 
-
 <ion-content>
-  <form (submit)="doSignup()">
-    <ion-list>
-
-      <ion-item>
-        <ion-label fixed>{{ 'NAME' | translate }}</ion-label>
-        <ion-input type="text" [(ngModel)]="account.name" name="name"></ion-input>
-      </ion-item>
-
-      <ion-item>
-        <ion-label fixed>{{ 'EMAIL' | translate }}</ion-label>
-        <ion-input type="email" [(ngModel)]="account.email" name="email"></ion-input>
-      </ion-item>
-
-      <!--
-      Want to add a Username? Here you go:
-
-      <ion-item>
-        <ion-label floating>Username</ion-label>
-        <ion-input type="text" [(ngModel)]="account.username" name="username"></ion-input>
-      </ion-item>
-      -->
-
-      <ion-item>
-        <ion-label fixed>{{ 'PASSWORD' | translate }}</ion-label>
-        <ion-input type="password" [(ngModel)]="account.password" name="password"></ion-input>
-      </ion-item>
-
-      <div padding>
-        <button ion-button color="primary" block>{{ 'SIGNUP_BUTTON' | translate }}</button>
+    <form [formGroup]='myForm'>
+      <div class = "form-group">
+        <ion-item>
+          <ion-label stacked>First Name</ion-label>
+          <ion-input formControlName="firstName" type='text' clearOnEdit="false"></ion-input>
+        </ion-item>
+        <div *ngIf="myForm.controls.firstName.pristine && signupAttempt">
+          <p class="req">Please enter your First Name.</p>
+        </div>
       </div>
+      <br>
 
-    </ion-list>
-  </form>
+      <div class = "form-group">
+        <ion-item>
+          <ion-label stacked>Last Name</ion-label>
+          <ion-input formControlName="lastName" type='text' clearOnEdit="false"></ion-input>
+        </ion-item>
+        <div *ngIf="myForm.controls.lastName.pristine && signupAttempt">
+          <p class="req">Please enter your Last Name.</p>
+        </div>
+      </div>
+      <br>
+ 
+      <div class = "form-group">
+        <ion-item>
+          <ion-label stacked>Date of Birth</ion-label>
+          <ion-datetime displayFormat="MMM DD, YYYY" formControlName="birthday" 
+                        placeholder="MM/DD/YYYY" clearOnEdit="false"></ion-datetime>
+        </ion-item>
+        <div *ngIf="myForm.controls.birthday.pristine && signupAttempt">
+          <p class="req">Please enter your Date of Birth.</p>
+        </div>
+      </div>
+      <br>
+
+      <div class = "form-group">
+        <ion-item>
+          <ion-label stacked>Email</ion-label>
+          <ion-input formControlName="email" type='email' 
+          (ionChange)="emailField($event)" clearOnEdit="false">
+          </ion-input>
+        </ion-item>
+          <div *ngIf="myForm.controls.email.valid">
+            <p class="noice">Nice Email!</p>
+          </div>
+          <div *ngIf="myForm.controls.email.pristine && signupAttempt">
+            <p class="req">Please enter an Email.</p>
+          </div>
+          <div *ngIf="!myForm.controls.email.pristine && !myForm.controls.email.valid 
+              && signupAttempt">
+            <p class="req">Email is not valid. ex: john_doe@example.com</p>
+          </div>
+      </div>
+      <br>
+
+      <div class = "form-group">
+        <ion-item>
+          <ion-label stacked>Confirm Email*</ion-label>
+          <ion-input (ionChange)="confirmEmailField($event)" 
+            formControlName="confirmEmail" 
+            type='email' clearOnEdit="false">
+          </ion-input>
+        </ion-item>
+        <div *ngIf="!myForm.controls.email.pristine && myForm.controls.confirmEmail.pristine 
+            && signupAttempt">
+          <p class="req">Please confirm your Email.</p>
+        </div>
+        <div *ngIf="(signupAttempt && !myForm.controls.email.valid
+            && myForm.controls.confirmEmail.errors?.MatchEmail)
+            || (!confirmEmailEmpty && myForm.controls.confirmEmail.errors?.MatchEmail)">
+          <p class="req">Emails do not match.</p>
+        </div>
+        <div *ngIf="myForm.controls.email.valid 
+            && myForm.controls.confirmEmail.errors === null">
+          <p class="noice">Emails match!</p>
+        </div>
+      </div>
+      <br>
+      <div class = "form-group">
+        <ion-item>
+          <ion-label stacked>Password</ion-label>
+          <ion-input autocomplete="new-password" formControlName="password" type="{{isPassword}}" 
+            (ionChange)="passwordField($event)" clearOnEdit="false"
+            (ionFocus)="onFocus($event)" (ionBlur)= "onBlur($event)">
+          </ion-input>
+          <button class = "passwordIcon" ion-button clear item-end 
+              (click)='showHide()' type="button">
+            <ion-icon name="{{isActive}}" item-right></ion-icon>
+          </button>
+        </ion-item>
+        <div *ngIf="!myForm.controls.password.valid 
+                && userFocused">
+          <p class = "req" style="color:black">Requirements:</p>
+            <div class="validCheck">
+              <p [ngStyle]="{'color': length? 'green' : 'red'}">
+                At least 8 characters long.
+              </p>
+              <div *ngIf="length">
+                <ion-icon class="check" name="checkmark"></ion-icon>
+              </div>
+            </div>
+            <div class="validCheck">
+              <p [ngStyle]="{'color': capital? 'green' : 'red'}">
+                1 upper-case letter (ABC...)
+              </p>
+              <div *ngIf="capital">
+                <ion-icon class="check" name="checkmark"></ion-icon>
+              </div>
+            </div>
+            <div class="validCheck">
+              <p [ngStyle]="{'color': lower? 'green' : 'red'}">
+                1 lower-case letter (abc...)
+              </p>
+              <div *ngIf="lower">
+                <ion-icon class="check" name="checkmark"></ion-icon>
+              </div>
+            </div>
+            <div class="validCheck">
+              <p [ngStyle]="{'color': number? 'green' : 'red'}">
+                1 number (123)
+              </p> 
+              <div *ngIf="number">
+                <ion-icon class="check" name="checkmark"></ion-icon>
+              </div>
+            </div>
+            <div class="validCheck">
+              <p [ngStyle]="{'color': special? 'green' : 'red'}">
+                1 special character (#$%!...)
+              </p>
+              <div *ngIf="special">
+                <ion-icon class="check" name="checkmark"></ion-icon>
+              </div>
+            </div>
+        </div>
+        <div *ngIf="myForm.controls.password.valid || sweetPassword">
+          <p class="noice">Nice Password!</p>
+        </div>
+        <div *ngIf="myForm.controls.password.pristine && signupAttempt">
+          <p class="req">Please enter a password.</p>
+        </div>
+        <div *ngIf="myForm.controls.password.dirty && !myForm.controls.password.valid 
+            && signupAttempt">
+          <p class="req">Password Not Valid.</p> 
+        </div>
+      </div>
+      <br>
+
+      <div class = "form-group">
+        <ion-item>
+          <ion-label stacked>Confirm Password*</ion-label>
+          <ion-input (ionChange)="confirmPasswordField($event)" 
+            formControlName="confirmPassword" 
+            type='password' clearOnEdit="false" >
+          </ion-input>
+        </ion-item>  
+        <div *ngIf="!myForm.controls.password.pristine && myForm.controls.confirmPassword.pristine && signupAttempt">
+          <br>
+          <p class="req">Please confirm your password.</p>
+        </div>
+        <div *ngIf="(signupAttempt && !myForm.controls.password.valid 
+            && myForm.controls.confirmPassword.errors?.MatchPassword)
+            || ( !confirmPassEmpty && myForm.controls.confirmPassword.errors?.MatchPassword)">
+          <p class="req">Passwords do not match.</p>
+        </div>
+        <div *ngIf="myForm.controls.password.valid 
+            && myForm.controls.confirmPassword.errors === null">
+          <p class="noice">Passwords match!</p>
+        </div>
+      </div>
+      <br>
+      <div padding>
+        <button ion-button full color="primary" (click)="submit()">Register</button>
+      </div> 
+    </form>
 </ion-content>
+

@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { IonicPage, NavController, ToastController } from 'ionic-angular';
-
+import { IonicPage, NavController, ToastController, MenuController } from 'ionic-angular';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../../providers';
 import { MainPage } from '../';
 
@@ -11,40 +10,84 @@ import { MainPage } from '../';
   templateUrl: 'login.html'
 })
 export class LoginPage {
-  // The account fields for the login form.
-  // If you're using the username field with or without email, make
-  // sure to add it to the type
-  account: { email: string, password: string } = {
-    email: 'test@example.com',
-    password: 'test'
-  };
+  //form and generted user
+  myForm: FormGroup;
+  returningUser: any;
 
-  // Our translated text strings
-  private loginErrorString: string;
+  //Error Handling
+  invalidCredentials: boolean = false;
+  otherError: boolean = false;
+
+  //showPassword properties
+  isPassword: string = 'password';
+  isActive: string = 'eye-off';
+ 
 
   constructor(public navCtrl: NavController,
-    public user: User,
-    public toastCtrl: ToastController,
-    public translateService: TranslateService) {
+              public _user: User,
+              public toastCtrl: ToastController,
+              public menuCtrl: MenuController,
+              public fb:FormBuilder) {
+    this.createForm();
+  }
 
-    this.translateService.get('LOGIN_ERROR').subscribe((value) => {
-      this.loginErrorString = value;
+  createForm(){
+    this.myForm = this.fb.group({
+      email: ['', Validators.required],
+      password: ['', Validators.required]
     })
   }
 
-  // Attempt to login in through our User service
-  doLogin() {
-    this.user.login(this.account).subscribe((resp) => {
-      this.navCtrl.push(MainPage);
-    }, (err) => {
-      this.navCtrl.push(MainPage);
-      // Unable to log in
-      let toast = this.toastCtrl.create({
-        message: this.loginErrorString,
-        duration: 3000,
-        position: 'top'
-      });
-      toast.present();
-    });
+  loginUser() {
+    //create newUser from input data (for clean data)
+    console.log(this.myForm)
+    this.returningUser = {
+      email: this.myForm.controls.email.value.toLowerCase(),
+      password: this.myForm.controls.password.value
+    }
+    return this._user.loginCustom(this.returningUser).subscribe(
+      (userLog: any) => {
+        this._user.user = userLog.user
+        this._user.userBirthday = userLog.user.birthday
+        console.log(userLog.user)
+        sessionStorage.setItem('token', userLog.token)
+        sessionStorage.setItem('userId', userLog.userId)
+
+        this.menuCtrl.enable(true);
+        this.menuCtrl.swipeEnable(true);
+        this.navCtrl.setRoot(MainPage);
+      }, (err) => {
+        //Error Handling
+        console.log(err, "error");
+        let badCreds = err.status === 401;
+        console.log("Are creds valid?",badCreds);
+        if (badCreds){
+          this.invalidCredentials = true;
+        }
+        else{
+          this.otherError = true;
+        }
+        console.log("invalid creds?", this.invalidCredentials, "Some other Error?", this.otherError)
+      }
+    )
   }
+
+  //showPassword methods
+  showHide() {
+    this.changeEyeIcon();
+    this.changePasswordType();
+  }
+  //changes eye Icon "name" on click 
+  changeEyeIcon(){
+    this.isActive = 
+      this.isActive === 'eye-off' ?
+        "eye" : "eye-off" 
+  }
+  //changes password field "type" on click
+  changePasswordType(){
+    this.isPassword = 
+      this.isPassword === 'password' ?
+        "text" : "password"
+  }
+
 }
