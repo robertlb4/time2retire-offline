@@ -300,7 +300,6 @@ export class ChartPage {
   }
 
   ionViewDidLoad() {
-    console.log(this._user.user)
     Chart.pluginService.register(ChartLabels);
     
   }
