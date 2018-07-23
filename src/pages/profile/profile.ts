@@ -34,7 +34,7 @@ export class ProfilePage {
     let loader = this.loader.create({
     })
     loader.present()
-        this.chartData = JSON.parse(localStorage.getItem('savedCharts'))
+        this.chartData = JSON.parse(localStorage.getItem('savedCharts')) ? JSON.parse(localStorage.getItem('savedCharts')) : [] 
         loader.dismiss();
   }
 

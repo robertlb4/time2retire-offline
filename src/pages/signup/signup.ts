@@ -7,6 +7,10 @@ import { EmailValidation } from './email-validation';
 import { User } from '../../providers';
 import { MainPage } from '../';
 
+
+// This page is currently not being used inorder to allow the app to run completely offline and not require registration
+// to re-enable add desired pages to side menu in app.component.ts, and adjust the page navigation as necassary
+
 @IonicPage()
 @Component({
   selector: 'page-signup',

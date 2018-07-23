@@ -8,7 +8,11 @@
 </ion-header>
 
 <ion-content padding>
-  <div *ngIf="_user.user">
+
+<!-- If reactivating login and userprofile then uncomment the below code to display user profile -->
+
+
+  <!-- <div *ngIf="_user.user">
     <h1 align="center">Hello, {{_user.user.firstName}}!</h1>
     <ion-card class="user-info">
 
@@ -21,9 +25,9 @@
           <button  *ngIf="editting" class="confirm-button" item-right ion-button icon-only clear (click)="updateProfile()">
             <ion-icon name="checkbox-outline"></ion-icon>
           </button>
-      </ion-card-header>
+      </ion-card-header> -->
 
-      <ion-card-content class= "user-info-content" *ngIf="!editting">
+      <!-- <ion-card-content class= "user-info-content" *ngIf="!editting">
           <ion-item class= "user-info-details">
             <span item-start>Name</span> <span item-end>{{ _user.user.firstName }} {{ _user.user.lastName }}</span>
           </ion-item>
@@ -33,9 +37,9 @@
           <ion-item class= "user-info-details">
             <span item-start>Birthday</span> <span item-end>{{_user.user.birthday | moment: 'M / DD / YYYY': true }}</span>
           </ion-item>
-      </ion-card-content>
+      </ion-card-content> -->
 
-      <ion-card-content class= "user-info-content" *ngIf="editting">
+      <!-- <ion-card-content class= "user-info-content" *ngIf="editting">
         <ion-item class= "user-info-details">
           <ion-label stacked>First Name</ion-label>
           <ion-input type="text" [(ngModel)]="_user.user.firstName"></ion-input>
@@ -50,7 +54,7 @@
         </ion-item>
       </ion-card-content>
     </ion-card>
-  </div>
+  </div> -->
 
       <div *ngIf="chartData.length < 1">
         <p align="center">

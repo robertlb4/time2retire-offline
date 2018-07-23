@@ -18,6 +18,7 @@ export class Api {
     this.http.post(this.url, {})
   }
 
+  //this endpoint is not currently used as the app has been adjust to run offline.
   getRetire(dob, income, statement) {
     return this.http.get(this.url + `benefitprofile?dob=${dob}&income=${income}&statement=${statement}`);
   }
