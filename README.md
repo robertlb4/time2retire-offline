@@ -27,7 +27,7 @@ The app itself is designed with simplicity in mind.
 
 ## <a name="getting-started"></a>Getting Started
 
-<img src="./src/assets/img/newImages/Time2Retire 01 Welcome 01.png" height="400" width="220"/>
+<img src="./src/assets/img/newImages/Time2Retire 01 Welcome.png" height="400" width="220"/>
 
 When first opening the app, the user is presented with a simple tutorial displayed through a series of slides. 
 Each of the slides contains a snapshot of each page of the app, followed by a simple description.
@@ -92,7 +92,7 @@ All of this infomration is used to calculate their best age to retire.
 
 ## <a name="viewing-chart"></a>Viewing Chart
 
-<img src="./src/assets//newImages/Time2Retire 05 Show Chart 01.png" height="400" width="220"/>
+<img src="./src/assets/img/newImages/Time2Retire 05 Show Chart 01.png" height="400" width="220"/>
 
 Once a user has input all of the required information in the "create a chart"
 page and then tapped the "generate chart" button, the user is then directed to
