@@ -5,6 +5,7 @@ import { Chart } from 'chart.js'
 import * as ChartLabels from 'chartjs-plugin-datalabels';
 import { Api } from '../../providers/api/api';
 import { User } from '../../providers/user/user';
+import { CalcProvider } from '../../providers/calc/calc'
 import { HttpClientModule } from '@angular/common/http';
 
 @IonicPage()
@@ -35,6 +36,7 @@ export class ChartPage {
     public formBuilder: FormBuilder,
     public _api: Api,
     public _user: User,
+    public _calc: CalcProvider,
     public _http: HttpClientModule,
     public toastCtrl: ToastController,
     public loader: LoadingController,
@@ -42,7 +44,7 @@ export class ChartPage {
     public navparam: NavParams,
   ) {
     this.inputForm = formBuilder.group({
-      dateOfBirth: [this._user.userBirthday, Validators.required],
+      dateOfBirth: ['', Validators.required],
       amountPaid: ['', Validators.compose([Validators.min(1), Validators.required])],
       avgIncome: ['', Validators.compose([Validators.min(1), Validators.max(2788), Validators.required])]
     })
@@ -126,13 +128,6 @@ export class ChartPage {
   public barChartType: string = 'bar';
   public barChartLegend: boolean = true;
 
-  // events
-  public chartClicked(e: any): void {
-    console.log(e);
-  }
-  public chartHovered(e: any): void {
-    console.log(e);
-  }
   public barChartData: any[] = [
     { data: [this.monthlyBenefit], label: 'Monthly Benefit Amt.', yAxisID: 'A'},
     { data: [this.totalBenefit], label: 'Total Benefit', yAxisID: 'B'}
@@ -193,23 +188,23 @@ export class ChartPage {
     let dob = this.inputForm.value.dateOfBirth;
     let income = this.inputForm.value.avgIncome
     this.bucketYear = dob + 85;
-    this._api.getRetire(dob, income, 'true')
-      .subscribe(data => {
-        this.benefitObject = data;
+    
+      // .subscribe(data => {
+        this.benefitObject = this._calc.calculateBenefit(dob, income, 'true')
         this.bestYear = this.getBestYear(this.benefitObject)
         this.slider.lower = this.bestYear
         this.updateChart(this.bestYear);
         this.haveData = true
         loader.dismiss()
-      }, err => {
-        loader.dismiss();
-        let toast = this.toastCtrl.create({
-          message: 'Unable to complete calculations.  Please try again later',
-          duration: 3000,
-          position: 'top'
-        })
-        toast.present()
-      })
+      // }, err => {
+      //   loader.dismiss();
+      //   let toast = this.toastCtrl.create({
+      //     message: 'Unable to complete calculations.  Please try again later',
+      //     duration: 3000,
+      //     position: 'top'
+      //   })
+      //   toast.present()
+      // })
     }
   }
 
@@ -224,7 +219,6 @@ export class ChartPage {
     if (this.slider.lower > 70) {
       this.sliderIncrementer ++
       this.slider.lower = 70;
-      console.log(this.sliderIncrementer)
       if (this.sliderIncrementer%10 === 0) {
         let toast = this.toastCtrl.create({
           message: 'The Social Security Administration requires you to start taking benefits at 70',
@@ -271,21 +265,14 @@ export class ChartPage {
       benefitObject: this.benefitObject,
       timestamp: Date.now()
     }
-    this._user.savedChart(this.chartSave).subscribe(
-      (chartLog: any) => {
-        if (!this._user.user.charts) {
-          this._user.user.charts = []
-        }
+    this._user.savedChart(this.chartSave)
         let toast = this.toastCtrl.create({
           message: 'Chart Saved.',
           duration: 2000,
           position: 'top'
         });
         toast.present()
-        this._user.user.charts.push(chartLog)
-        // console.log(chartLog.user)
-      }
-    )
+        // this._user.user.charts.push(chartLog)
   }
   navProfile(){
     this.navCtrl.setRoot("ProfilePage")

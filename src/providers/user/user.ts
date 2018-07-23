@@ -15,10 +15,12 @@ export class User {
   user: any;
   userBirthday: string = ''
   helloWorld: string = "hello world"
-  charts: any[];
+  charts: any[] = []
   chart_url: string = "/charts?access_token="
 
-  constructor(public api: Api, public http: HttpClient) { }
+  constructor(public api: Api, public http: HttpClient) { 
+    this.charts = JSON.parse(localStorage.getItem('savedCharts'))
+  }
 
   loginCustom(user) {
     return this.http.post(this.base_url + this.login_url, user)
@@ -28,11 +30,7 @@ export class User {
     return this.http.post(this.base_url + this.register_url, signupUser)
   }
 
-  /**
-   * Log the user out, which forgets the session
-   */
   logout() {
-    console.log("logout function fires")
     let token = sessionStorage.getItem('token');
     this.http.post(this.base_url + this.appUsers_url + this.logout_url + token, this.user)
     .subscribe(() => {
@@ -42,12 +40,17 @@ export class User {
   }
 
   savedChart(chart) {
-    let userID = sessionStorage.getItem('userId');
-    let token = sessionStorage.getItem('token');
-    console.log(this.base_url + this.appUsers_url + userID, this.chart_url, chart)
-    return this.http.post(this.base_url + this.appUsers_url + userID + this.chart_url + token, chart)
-    // https://nameless-wave-33070.herokuapp.com/api/appUsers/5afd09bbd0ac6b3a779a11cb/charts?access_token=jo8H66VjJb9VCn72CR7uk5mUStox9NyqrpRGmfV2F9xEHYvvUHiaxKOSZ9dm6Jr1
+    // let userID = sessionStorage.getItem('userId');
+    // let token = sessionStorage.getItem('token');
+    // return this.http.post(this.base_url + this.appUsers_url + userID + this.chart_url + token, chart)
+    if(!this.charts) this.charts = [];
+    this.charts.push(chart)
+    localStorage.setItem('savedCharts', JSON.stringify(this.charts))
+  }
 
+  deleteChart(index){
+    this.charts.splice(index, 1);
+    localStorage.setItem('savedCharts', JSON.stringify(this.charts))
   }
 
   updateUser() {

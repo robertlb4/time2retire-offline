@@ -39,8 +39,6 @@ export class TutorialPage {
       "TUTORIAL_SLIDE8_DESCRIPTION",
     ]).subscribe(
       (values) => {
-        console.log(ENV)
-        // console.log('Loaded values', values);
         this.slides = [
           {
             title: values.TUTORIAL_SLIDE1_TITLE,
@@ -82,15 +80,8 @@ export class TutorialPage {
   }
 
   startApp() {
-    let token = sessionStorage.getItem('token');
-    if (token) {
-      this.navCtrl.setRoot('ProfilePage')
-    } else {
-    this.navCtrl.setRoot('WelcomePage', {}, {
-      animate: true,
-      direction: 'forward'
-    });
-  }
+    localStorage.setItem('viewedTutorial', 'true')
+    this.navCtrl.setRoot('ChartPage')
   }
 
   onSlideChangeStart(slider) {
@@ -99,12 +90,12 @@ export class TutorialPage {
 
   ionViewDidEnter() {
     // the root left menu should be disabled on the tutorial page
-    this.menu.enable(false);
+    // this.menu.enable(false);
   }
 
   ionViewWillLeave() {
     // enable the root left menu when leaving the tutorial page
-    this.menu.enable(true);
+    // this.menu.enable(true);
   }
 
 }

@@ -1,8 +1,12 @@
 page-profile {
     
+    .profileButtons{
+        display: flex;
+        justify-content: center;
+    }
+
     .profile-header {
         background-color: #b4d6c7;
-        // padding: 10px;
         color: #1a4056;
     }
     .user-info-header {
@@ -24,6 +28,7 @@ page-profile {
             color: #1a4056
         }
     }
+
     .user-info-content {
         padding: 0;
     }
@@ -40,13 +45,22 @@ page-profile {
     .user-info-details {
         border-bottom: 1px solid gray;
     }
- 
-    .profileButtons{
-        display: flex;
-        justify-content: center;
-        .genButton{
-            // justify-self: stretch;
-        }
-    }
 
+    .saved-chart-header {
+        padding: 0;
+        display: flex;
+        justify-content: flex-start;
+        position: relative;
+        .saved-chart-header-text {
+            align-self: center;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .delete-btn {
+            margin-left: auto;
+            padding-right: 3px;
+        }
+       
+    }
 }
