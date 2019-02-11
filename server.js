@@ -1,24 +1,12 @@
-var express  = require('express');
-var app      = express();                               
-// var morgan = require('morgan');            
-var bodyParser = require('body-parser');    
-// var cors = require('cors');
- 
-// app.use(morgan('dev'));                                        
-app.use(bodyParser.urlencoded({'extended':'true'}));            
-app.use(bodyParser.json());                                     
-// app.use(cors());
- 
-app.use(function(req, res, next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'DELETE, PUT');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-  next();
-});
- 
+'use strict';
+
+const express = require('express');
+const PORT = process.env.PORT || 5000;
+const app = express();
+
 app.use(express.static('public'));
 app.use('/app', express.static('www'));
-// app.set('port', process.env.PORT || 5000);
-app.listen(process.env.PORT || 5000, '0.0.0.0', function () {
-  console.log('Express server listening on port ' + app.get('port'));
-});
+
+app.listen(PORT, () => console.log(`Listening on ${ PORT }`))
+
+ 
