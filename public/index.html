@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>My app</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/x-icon" href="../www/assets/icon/favicon.ico">
+
+  <style>
+    #phone-case {
+      position: relative;
+      z-index: 1;
+      width: 380px;
+      height: 810px;
+      background: url("https://ionicframework.com/img/phone-case.png") no-repeat right top;
+      margin-left: 20px; 
+    }
+
+    iframe {
+      position: absolute;
+      width: 320px !important;
+      height: 568px;
+      top: 104px;
+      left: 37px; 
+    }
+  
+  </style>
+
+</head>
+<body>
+    <div id="phone-case">
+    <div>
+        <iframe src="http://localhost:5000/app"></iframe>
+      </div>
+    </div>
+  
+</body>
+</html>
