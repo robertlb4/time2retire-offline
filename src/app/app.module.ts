@@ -5,11 +5,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms'
 import { Camera } from '@ionic-native/camera';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
-import { IonicStorageModule, Storage } from '@ionic/storage';
+import { IonicStorageModule} from '@ionic/storage';
 import { TranslateLoader, TranslateModule } from '@ngx-translate/core';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { ChartsModule } from 'ng2-charts/ng2-charts';
 import { User, Api } from '../providers';
 import { MyApp } from './app.component';
@@ -55,7 +54,6 @@ export function createTranslateLoader(http: HttpClient) {
     Camera,
     SplashScreen,
     StatusBar,
-    // { provide: useFactory: provideSettings, deps: [Storage] },
     // Keep this to enable Ionic's runtime error handling during development
     { provide: ErrorHandler, useClass: IonicErrorHandler },
     CalcProvider

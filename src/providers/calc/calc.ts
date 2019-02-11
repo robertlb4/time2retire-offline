@@ -11,7 +11,6 @@ export class CalcProvider {
   calculateBenefit(dob, income, statement) {
     let startAge = [62, 63, 64, 65, 66, 67, 68, 69, 70];
     let dobYear = Number(dob.substr(0, 4));
-    let maxBen = 2788;
     let monthlyIncome = income / 12;
     let fra;
     let fullBen;
